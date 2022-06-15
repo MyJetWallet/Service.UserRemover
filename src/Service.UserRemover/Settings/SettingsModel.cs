@@ -34,5 +34,11 @@ namespace Service.UserRemover.Settings
         
         [YamlProperty("UserRemover.AuthServiceBusHostPort")]
         public string AuthServiceBusHostPort { get; set; }
+        
+        [YamlProperty("UserRemover.MessageTemplatesGrpcServiceUrl")]
+        public string MessageTemplatesGrpcServiceUrl { get; set; }
+        
+        [YamlProperty("UserRemover.VerificationCodesGrpcUrl")]
+        public string VerificationCodesGrpcUrl { get; set; }
     }
 }

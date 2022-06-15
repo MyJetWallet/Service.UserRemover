@@ -8,6 +8,9 @@ namespace Service.UserRemover.Grpc
     public interface IUserRemoverService
     {
         [OperationContract]
-        Task<OperationResponse> RemoveUser(RemoveUserRequest request);
+        Task<OperationResponse> RemoveUserClient(RemoveUserClientRequest request);
+        
+        [OperationContract]
+        Task<OperationResponse> RemoveUserAdmin(RemoveUserAdminRequest request);
     }
 }

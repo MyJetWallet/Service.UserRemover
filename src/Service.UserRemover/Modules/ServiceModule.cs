@@ -9,7 +9,9 @@ using Service.ClientAuditLog.Client;
 using Service.ClientProfile.Client;
 using Service.ClientWallets.Client;
 using Service.KYC.Client;
+using Service.MessageTemplates.Client;
 using Service.PersonalData.Client;
+using Service.VerificationCodes.Client;
 
 namespace Service.UserRemover.Modules
 {
@@ -29,6 +31,9 @@ namespace Service.UserRemover.Modules
             builder.RegisterPersonalDataClient(Program.Settings.PersonalDataGrpcServiceUrl);
             builder.RegisterClientProfileClients(myNoSqlClient, Program.Settings.ClientProfileGrpcServiceUrl);
             builder.RegisterClientCommentsClient(Program.Settings.AdminDatasourceGrpcServiceUrl);
+            builder.RegisterMessageTemplatesClient(Program.Settings.MessageTemplatesGrpcServiceUrl);
+            builder.RegisterVerificationCodesClient(Program.Settings.VerificationCodesGrpcUrl);
+            
             
             var authMyServiceBusClient = builder.RegisterMyServiceBusTcpClient(()=>Program.Settings.AuthServiceBusHostPort, Program.LogFactory);
             builder.RegisterClientAuditLogPublisher(authMyServiceBusClient);
