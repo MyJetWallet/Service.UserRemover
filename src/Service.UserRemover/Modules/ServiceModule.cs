@@ -8,6 +8,7 @@ using Service.AdminDatasource.Client;
 using Service.ClientAuditLog.Client;
 using Service.ClientProfile.Client;
 using Service.ClientWallets.Client;
+using Service.HighYieldEngine.Client;
 using Service.KYC.Client;
 using Service.MessageTemplates.Client;
 using Service.PersonalData.Client;
@@ -33,7 +34,8 @@ namespace Service.UserRemover.Modules
             builder.RegisterClientCommentsClient(Program.Settings.AdminDatasourceGrpcServiceUrl);
             builder.RegisterMessageTemplatesClient(Program.Settings.MessageTemplatesGrpcServiceUrl);
             builder.RegisterVerificationCodesClient(Program.Settings.VerificationCodesGrpcUrl);
-            
+            builder.RegisterHighYieldEngineBackofficeService(Program.Settings.HighYieldEngineGrpcServiceUrl);
+
             
             var authMyServiceBusClient = builder.RegisterMyServiceBusTcpClient(()=>Program.Settings.AuthServiceBusHostPort, Program.LogFactory);
             builder.RegisterClientAuditLogPublisher(authMyServiceBusClient);

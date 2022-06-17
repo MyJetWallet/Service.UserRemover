@@ -40,5 +40,8 @@ namespace Service.UserRemover.Settings
         
         [YamlProperty("UserRemover.VerificationCodesGrpcUrl")]
         public string VerificationCodesGrpcUrl { get; set; }
+        
+        [YamlProperty("UserRemover.HighYieldEngineServiceUrl")]
+        public string HighYieldEngineGrpcServiceUrl { get; set; }
     }
 }

@@ -16,6 +16,8 @@ using Service.ClientProfile.Grpc;
 using Service.ClientProfile.Grpc.Models.Requests;
 using Service.ClientWallets.Grpc;
 using Service.ClientWallets.Grpc.Models;
+using Service.HighYieldEngine.Grpc;
+using Service.HighYieldEngine.Grpc.Models.ClientEarnEnableState;
 using Service.KYC.Domain.Models.Enum;
 using Service.KYC.Grpc;
 using Service.KYC.Grpc.Models;
@@ -44,10 +46,11 @@ namespace Service.UserRemover.Services
         private readonly IServiceBusPublisher<ClientAuditLogModel> _publisher;
         private readonly ITemplateService _templateClient;
         private readonly IVerificationService _verificationService;
+        private readonly IHighYieldEngineBackofficeService _highYieldEngineBackofficeService;
         public UserRemoverService(ILogger<UserRemoverService> logger, IPersonalDataServiceGrpc personalData,
             IClientProfileService clientProfile, IClientWalletService clientWalletService, IWalletService walletService,
             IClientCommentsService clientCommentsService, IKycStatusService kycStatusService,
-            IServiceBusPublisher<ClientAuditLogModel> publisher, ITemplateService templateClient, IVerificationService verificationService)
+            IServiceBusPublisher<ClientAuditLogModel> publisher, ITemplateService templateClient, IVerificationService verificationService, IHighYieldEngineBackofficeService highYieldEngineBackofficeService)
         {
             _logger = logger;
             _personalData = personalData;
@@ -59,6 +62,7 @@ namespace Service.UserRemover.Services
             _publisher = publisher;
             _templateClient = templateClient;
             _verificationService = verificationService;
+            _highYieldEngineBackofficeService = highYieldEngineBackofficeService;
         }
 
         public async Task<OperationResponse> RemoveUserClient(RemoveUserClientRequest request)
@@ -166,6 +170,12 @@ namespace Service.UserRemover.Services
                 {
                     WalletId = wallet.WalletId,
                     EnableEarnProgram = false
+                });
+
+                await _highYieldEngineBackofficeService.SetClientEarnEnableState(new SetClientEarnEnableStateGrpcRequest
+                {
+                    ClientId = clientId,
+                    State = false
                 });
 
                 await _publisher.PublishAsync(new ClientAuditLogModel
