@@ -10,6 +10,7 @@ using MyJetWallet.Sdk.ServiceBus;
 using MyJetWallet.Sdk.WalletApi.Wallets;
 using Service.AdminDatasource.Grpc;
 using Service.AdminDatasource.Grpc.Models.ClientComments.Requests;
+using Service.Authorization.Grpc;
 using Service.ClientAuditLog.Domain.Models;
 using Service.ClientProfile.Domain.Models;
 using Service.ClientProfile.Grpc;
@@ -47,10 +48,11 @@ namespace Service.UserRemover.Services
         private readonly ITemplateService _templateClient;
         private readonly IVerificationService _verificationService;
         private readonly IHighYieldEngineBackofficeService _highYieldEngineBackofficeService;
+        private readonly IAuthService _authService;
         public UserRemoverService(ILogger<UserRemoverService> logger, IPersonalDataServiceGrpc personalData,
             IClientProfileService clientProfile, IClientWalletService clientWalletService, IWalletService walletService,
             IClientCommentsService clientCommentsService, IKycStatusService kycStatusService,
-            IServiceBusPublisher<ClientAuditLogModel> publisher, ITemplateService templateClient, IVerificationService verificationService, IHighYieldEngineBackofficeService highYieldEngineBackofficeService)
+            IServiceBusPublisher<ClientAuditLogModel> publisher, ITemplateService templateClient, IVerificationService verificationService, IHighYieldEngineBackofficeService highYieldEngineBackofficeService, IAuthService authService)
         {
             _logger = logger;
             _personalData = personalData;
@@ -63,6 +65,7 @@ namespace Service.UserRemover.Services
             _templateClient = templateClient;
             _verificationService = verificationService;
             _highYieldEngineBackofficeService = highYieldEngineBackofficeService;
+            _authService = authService;
         }
 
         public async Task<OperationResponse> RemoveUserClient(RemoveUserClientRequest request)
@@ -115,6 +118,11 @@ namespace Service.UserRemover.Services
                         IsSuccess = false,
                         ErrorMessage = "Unable to deactivate client in PD"
                     };
+                
+                await _authService.RemoveCredentialsAsync(new ()
+                {
+                    ClientId = clientId
+                });
                 
                 var commentResponse = await _clientCommentsService.AddAsync(new AddClientCommentRequest
                 {

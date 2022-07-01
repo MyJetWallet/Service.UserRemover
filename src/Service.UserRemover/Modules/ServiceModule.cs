@@ -5,6 +5,7 @@ using MyJetWallet.Sdk.NoSql;
 using MyJetWallet.Sdk.ServiceBus;
 using MyJetWallet.Sdk.WalletApi.Wallets;
 using Service.AdminDatasource.Client;
+using Service.Authorization.Client;
 using Service.ClientAuditLog.Client;
 using Service.ClientProfile.Client;
 using Service.ClientWallets.Client;
@@ -35,7 +36,7 @@ namespace Service.UserRemover.Modules
             builder.RegisterMessageTemplatesClient(Program.Settings.MessageTemplatesGrpcServiceUrl);
             builder.RegisterVerificationCodesClient(Program.Settings.VerificationCodesGrpcUrl);
             builder.RegisterHighYieldEngineBackofficeService(Program.Settings.HighYieldEngineGrpcServiceUrl);
-
+            builder.RegisterAuthorizationClient(Program.Settings.AuthorizationGrpcServiceUrl);
             
             var authMyServiceBusClient = builder.RegisterMyServiceBusTcpClient(()=>Program.Settings.AuthServiceBusHostPort, Program.LogFactory);
             builder.RegisterClientAuditLogPublisher(authMyServiceBusClient);

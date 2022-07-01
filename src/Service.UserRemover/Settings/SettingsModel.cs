@@ -43,5 +43,8 @@ namespace Service.UserRemover.Settings
         
         [YamlProperty("UserRemover.HighYieldEngineServiceUrl")]
         public string HighYieldEngineGrpcServiceUrl { get; set; }
+        
+        [YamlProperty("UserRemover.AuthorizationGrpcServiceUrl")]
+        public string AuthorizationGrpcServiceUrl { get; set; }
     }
 }
